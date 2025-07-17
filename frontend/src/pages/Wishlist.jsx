@@ -4,9 +4,11 @@ import { useState, useEffect } from "react";
 import { ArrowLeft } from "lucide-react";
 import WishlistCard from "../components/WishlistCard";
 import ordersdata from "../dummyData/ordersdata.json";
+import {useNavigate} from "react-router-dom";
 
 export default function Wishlist() {
   const [products, setProducts] = useState([]);
+  const navigate=useNavigate();
 
   useEffect(() => {
     setProducts(ordersdata);
@@ -16,7 +18,11 @@ export default function Wishlist() {
     <div className="min-h-screen px-4 py-6 bg-gray-100 transition-colors duration-300">
       {/* Header */}
       <div className="relative flex items-center mb-6">
-        <ArrowLeft className="text-black mr-4" />
+         <button onClick={() => navigate('/')}>
+             <ArrowLeft className="text-black mr-4" />
+         </button>
+         
+        
         <h1 className="text-2xl font-bold sm:text-center sm:w-full">My Wishlist</h1>
       </div>
 
