@@ -13,6 +13,9 @@ import AddPage from "./pages/AddPage.jsx";
 import RefreshHandler from './utils/RefreshHandler.jsx';
 import BottomNavBar from './components/BottomNavBar.jsx';
 import PrivateRoute from './utils/PrivateRoute';
+import Orders from './pages/Orders.jsx';
+import Wishlist from './pages/Wishlist.jsx';
+import Products from './pages/Products.jsx';
 
 // Import category pages
 import ElectronicsPage from './pages/explore/ElectronicsPage.jsx';
@@ -47,13 +50,20 @@ const AppContent = ({ isAuthenticated, setIsAuthenticated, mode, setMode }) => {
     const theme = getTheme(mode);    return (
         <ThemeProvider theme={theme}>
             <CssBaseline />
-            <SessionInfo />
-            <RefreshHandler setIsAuthenticated={setIsAuthenticated} />
+            {/* <SessionInfo />
+            <RefreshHandler setIsAuthenticated={setIsAuthenticated||true} /> */}
             <Routes>
-                <Route path="/" element={<LandingPage isAuthenticated={isAuthenticated} />} />
-                <Route path="/auth" element={<GoogleLogin setIsAuthenticated={setIsAuthenticated} />} />
+                    {/* testing purpose added by yisihth remove this after seeing*/}
+                <Route path="/orders"element={<Orders/>}></Route>
+                <Route path="/wishlist" element={<Wishlist/>}/>
+                <Route path="/cart" element={<CartPage />} />
+                <Route path="/products"element={<Products/>}/>
                 <Route path="/add" element={<AddPage />} />
-                <Route element={<PrivateRoute isAuthenticated={isAuthenticated} />}>
+
+                <Route path="/" element={<LandingPage isAuthenticated={isAuthenticated||true} />} />
+                <Route path="/auth" element={<GoogleLogin setIsAuthenticated={setIsAuthenticated} />} />
+
+                <Route element={<PrivateRoute isAuthenticated={isAuthenticated||true} />}>
                     <Route path="/home" element={<HomePage />} />
                     <Route path="/explore" element={<ExplorePage />} />
                     {/* Category routes */}

@@ -4,15 +4,16 @@ import productRouter from './routes/productRoutes.js';
 import sessionRouter from './routes/sessionRoutes.js';
 import './models/dbConnections.js'
 import cors from 'cors';
-import 'dotenv/config';
-
+import dotenv from "dotenv";
 
 const app = express();
 app.use(cors());
-
+dotenv.config();
+console.log(process.env.CLOUDINARY_API_KEY)
 
 app.use(express.json());
-app.get('/', (req, res) => {
+app.get('/',(req, res) => {
+
     res.json({
         message: 'Hello from the backend!'
     });
@@ -22,7 +23,7 @@ app.get('/', (req, res) => {
 
 app.use('/auth', authRouter);
 app.use('/session', sessionRouter);
-app.use('/products', productRouter);
+app.use('/products',(req,res,next)=>{console.log(req.url);next()}, productRouter);
 
 
 //TODOs

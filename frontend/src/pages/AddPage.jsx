@@ -28,15 +28,32 @@ const AddPage = () => {
   });
   const [errors, setErrors] = useState({});
 
-  const handleImageUpload = (e) => {
-    const files = Array.from(e.target.files);
-    if (files.length + images.length > 5) {
-      alert('You can only upload up to 5 images.');
-      return;
-    }
-    const newImages = files.map(file => URL.createObjectURL(file));
-    setImages(prev => [...prev, ...newImages]);
+//added by yishith
+  const [selectedImg, setSelectedImg] = useState(null);
+
+  const handleImageUpload = async (e) => {
+    const file = e.target.files[0];
+    if (!file) return;
+
+    const reader = new FileReader();
+
+    reader.readAsDataURL(file);
+
+    reader.onload = async () => {
+      const base64Image = reader.result;
+      setSelectedImg(base64Image);
+    };
   };
+
+  // const handleImageUpload = (e) => {
+  //   const files = Array.from(e.target.files);
+  //   if (files.length + images.length > 5) {
+  //     alert('You can only upload up to 5 images.');
+  //     return;
+  //   }
+  //   const newImages = files.map(file => URL.createObjectURL(file));
+  //   setImages(prev => [...prev, ...newImages]);
+  // };
 
   const handleThumbnailClick = (index) => {
     const reordered = [images[index], ...images.filter((_, i) => i !== index)];
@@ -60,7 +77,7 @@ const AddPage = () => {
     if (!form.rentSell) tempErrors.rentSell = "Please select Rent/Sell";
     if (!form.amount) tempErrors.amount = "Amount is required";
     if (form.amount && (isNaN(form.amount) || Number(form.amount) <= 0)) tempErrors.amount = "Amount must be a positive number";
-    if (images.length === 0) tempErrors.images = "At least one image is required";
+    //if (images.length === 0) tempErrors.images = "At least one image is required";
     setErrors(tempErrors);
     return Object.keys(tempErrors).length === 0;
   };
@@ -76,7 +93,7 @@ const AddPage = () => {
       name: form.productName,
       price: parseFloat(form.amount), // Ensure price is a number
       desc: `${form.features} - ${form.rentSell}`, // Combine features and rent/sell for description
-      img: images[0], // Send the URL of the main image
+      img: selectedImg, // Send the URL of the main image
     };
 
     try {
@@ -111,7 +128,8 @@ const AddPage = () => {
       rentSell: '',
       amount: '',
     });
-    setImages([]);
+   // setImages([]);
+    setSelectedImg(null);//yishith
     setErrors({});
   };
 
@@ -139,8 +157,8 @@ const AddPage = () => {
           position: 'relative',
         }}
       >
-        {images.length > 0 ? (
-          <img src={images[0]} alt="Main" style={{ width: '100%', height: '100%', objectFit: 'cover' }} />
+        {selectedImg ? (
+          <img src={selectedImg} alt="Main" style={{ width: '100%', height: '100%', objectFit: 'cover' }} />
         ) : (
           <>
             <input
@@ -271,7 +289,7 @@ const AddPage = () => {
             zIndex: 10 // Ensure button appears above other elements
           }}
           onClick={handleSubmit}
-          disabled={images.length === 0}
+          disabled={!selectedImg}
         >
           Done
         </Button>
